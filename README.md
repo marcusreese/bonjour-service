@@ -27,7 +27,8 @@ npm install bonjour-service
 ## Usage
 
 ```js
-import { Bonjour } from 'bonjour-service'
+import Bonjour from 'bonjour-service'
+// or import { Bonjour } from 'bonjour-service'
 
 const instance = new Bonjour()
 
@@ -45,7 +46,7 @@ instance.find({ type: 'http' }, function (service) {
 ### Initializing
 
 ```js
-var instance = new Bonjour({ options }, errorCallback)
+const instance = new Bonjour({ options }, errorCallback)
 ```
 
 The `options` are optional and will be used when initializing the
@@ -57,7 +58,7 @@ crash the process. While not being strictly required, providing this is highly r
 
 ### Publishing
 
-#### `var service = bonjour.publish(options)`
+#### `const service = bonjour.publish(options)`
 
 Publishes a new service.
 
@@ -87,7 +88,7 @@ Destroy the mdns instance. Closes the udp socket.
 
 ### Browser
 
-#### `var browser = bonjour.find(options[, onup])`
+#### `const browser = bonjour.find(options[, onup])`
 
 Listen for services advertised on the network. An optional callback can
 be provided as the 2nd argument and will be added as an event listener
@@ -102,7 +103,7 @@ Options (all optional):
   module](https://github.com/watson/dns-txt) contructor. Set to `{
   binary: true }` if you want to keep the TXT records in binary
 
-#### `var browser = bonjour.findOne(options[, callback])`
+#### `const browser = bonjour.findOne(options[, callback])`
 
 Listen for and call the `callback` with the first instance of a service
 matching the `options`. If no `callback` is given, it's expected that
