@@ -9,6 +9,7 @@
     "multicast-dns": "^7.2.5"
   },
   "devDependencies": {
+    "@types/multicast-dns": "^7.2.4",
     "@types/node": "^25.9.1",
     "@typescript-eslint/eslint-plugin": "^8.59.4",
     "@typescript-eslint/parser": "^8.59.4",
@@ -17,7 +18,7 @@
     "standard": "^17.1.2",
     "tape": "^5.9.0",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   },
   "resolutions": {
     "js-yaml": "^4.1.1",
