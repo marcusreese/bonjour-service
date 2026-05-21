@@ -22,9 +22,10 @@ export interface BrowserConfig {
 export type BrowserOnUp = (service: Service) => void
 
 export interface BrowserEvents {
-    up: [service: Service]
-    down: [service: Service]
-    'txt-update': [newService: Service]
+    up              : [service: Service]
+    down            : [service: Service]
+    'txt-update'    : [newService: Service, existingService: Service]
+    'srv-update'    : [newService: Service, existingService: Service]
 }
 
 /**
@@ -114,8 +115,8 @@ export class Browser extends EventEmitter<BrowserEvents> {
                 matches.forEach((service: Service) => {
                     const existingService = self._services.find((s) => dnsEqual(s.fqdn, service.fqdn))
                     if (existingService) {
-                        existingService.lastSeen = service.lastSeen
-                        self.updateService(existingService, service)
+                        self.updateServiceSrv(existingService, service)
+                        self.updateServiceTxt(existingService, service)
                         return
                     }
                     self.addService(service)
@@ -164,20 +165,41 @@ export class Browser extends EventEmitter<BrowserEvents> {
         this.emit('up', service)
     }
 
-    private updateService(existingService:Service, service: Service) {
+    private updateServiceSrv(existingService: Service, newService: Service) {
+        // check if any properties derived from SRV are updated
+        if (existingService.name !== newService.name 
+            || existingService.host !== newService.host 
+            || existingService.port !== newService.port
+            || existingService.type !== newService.type
+            || existingService.protocol !== newService.protocol
+        ){
+            // replace service
+            this.replaceService(newService)
+
+            this.emit('srv-update', newService, existingService);
+        }
+    }
+
+    private updateServiceTxt(existingService: Service, service: Service) {
         // check if txt updated
-        if (equalTxt(service.txt, existingService.txt || {})) return
+        if (equalTxt(service.txt, existingService?.txt || {})) return
         // if the new service is not allowed by the txt query, remove it
         if(!filterService(service, this.txtQuery)) {
             this.removeService(service.fqdn)
             return
         }
+
         // replace service
-        this._services = this._services.map(function (s) {
+        this.replaceService(service)
+        
+        this.emit('txt-update', service, existingService);
+    }
+
+    private replaceService(service: Service) {
+        this._services = this._services.map((s) =>{
             if (!dnsEqual(s.fqdn, service.fqdn)) return s
             return service
         })
-        this.emit('txt-update', service);
     }
 
     private removeService(fqdn: string) {
