@@ -1,13 +1,15 @@
-import BonjourService, { Service as ServiceExport, Browser as BrowserExport, ServiceReferer as ServiceRefererExport, ServiceConfig as ServiceConfigExport } from './lib/bonjour'
+import BonjourService, { Service, Browser }                     from './lib/bonjour'
+import type { ServiceReferer, ServiceConfig, BrowserConfig }    from './lib/bonjour'
 
 class Bonjour extends BonjourService {}
 
-namespace Bonjour {
-    export const Bonjour        = BonjourService
-    export const Service        = ServiceExport
-    export const Browser        = BrowserExport
-    export type ServiceReferer  = ServiceRefererExport
-    export type ServiceConfig   = ServiceConfigExport
-}
+export { Bonjour, Service, Browser }
+export type { ServiceReferer, ServiceConfig, BrowserConfig }
+export default Bonjour
 
-export = Bonjour
+module.exports = Object.assign(Bonjour, {
+    Bonjour,
+    Service,
+    Browser,
+    default: Bonjour
+})
