@@ -1,4 +1,4 @@
-const { Bonjour } = require('../dist')
+const Bonjour = require('../dist')
 
 const service = new Bonjour()
 
